@@ -1,10 +1,7 @@
 
 Page({
-  data: {
-    items: [],
-    currentItem: 0,
+  data: {   
     openid: false
-    // link: "https://www.baidu.com"
   },
   onLoad: function(){
     let that = this;
@@ -25,13 +22,6 @@ Page({
         console.log('登录失败！' + res.errMsg)
         }
         }
-    });
-  },
-  addItem: function () {
-    this.data.items.push(this.data.currentItem++);
-    this.setData({
-      items: this.data.items,
-      currentItem: this.data.currentItem
     });
   }
 });
