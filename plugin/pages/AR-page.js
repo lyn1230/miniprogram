@@ -34,9 +34,7 @@ Page({
     isShowCamera: true,
     linkUrl: "https://www.wechatvr.org",
     isShowScan: true,
-    isShowAnimation: false,
-    // isShowScan: false,
-    // isShowAnimation: true
+    isShowAnimation: false
   },
   onLoad: function(options){  
     let that = this;  
@@ -383,7 +381,8 @@ requestActivityInformation(){
   let _this = this;
   globalData.innerWidth = wx.getSystemInfoSync().windowWidth;
   globalData.innerHeight = wx.getSystemInfoSync().windowHeight;
-  let activityConfig = {};let shareConfig;
+  let activityConfig = {};
+  let shareConfig;
   let url = platformServerUrl + "/services/frontend/rs/activity/scan/config/info?activityId=" + activityId ,
   queryParam = null,
   type = "GET";

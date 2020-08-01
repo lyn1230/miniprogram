@@ -6,10 +6,6 @@ Page({
     openid: false
     // link: "https://www.baidu.com"
   },
-  // onLoad: function () {
-  //   plugin.sayHello();
-  //   var world = plugin.answer;
-  // },
   onLoad: function(){
     let that = this;
     wx.login({
