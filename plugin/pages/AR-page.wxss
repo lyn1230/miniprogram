@@ -1,0 +1,165 @@
+/* plugin/pages/AR-page.wxss */
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+}
+.scanPage{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;    
+    z-index: 6;
+    /*display: none;*/
+}
+
+.scanTip{
+    color: #fff;
+    font-size: 16px;
+    position: absolute;
+    padding-top: 20%;   
+    padding-left: 20%;
+    z-index: 1;
+}
+
+.cameraClass {
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;  
+}
+
+.circleBox{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vw;   
+}
+.circle{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.redCircle{
+    animation: redRotate 2s linear 500ms infinite; 
+}
+@keyframes redRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+.whiteCircle{
+    animation: whiteRotate 2s linear 500ms infinite;    
+}
+
+@keyframes whiteRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(-360deg);
+    }
+}
+
+.ruleBtn{
+    position: absolute;    
+    bottom: 10%;
+    left: 38.935vw;
+    width: 22.13vw;
+    height: 7.47vw;
+    z-index:100;
+}
+.ruleArea {
+    position: absolute;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 20;
+    overflow: scroll;
+}
+
+.ruleArea .closeBtn{
+    position: absolute;
+    top: 20rpx;
+    right: 20rpx;
+    width: 60rpx;
+    height: 60rpx;  
+    z-index: 21;  
+}
+
+.image{
+  position: relative;
+  top: 50rpx;
+  right: 55rpx;
+  left: 55rpx;  
+  border-radius: 5px;
+  width: 640rpx;
+  height: auto;
+  z-index: 20;
+}
+.animation3D {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height:100%;    
+    z-index: 6;
+    /* background: #B24344; */
+}
+.myView{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+  }
+  .myVideo {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .navigatorView {
+    z-index: 101;
+  }
+
+  .login {
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    background-color: gray;
+    border-radius: 15px;
+    box-shadow: 15px 15px 15px #888888;
+  }
+

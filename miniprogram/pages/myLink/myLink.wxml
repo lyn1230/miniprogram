@@ -1,0 +1,2 @@
+<view wx:if="{{!link}}"></view>
+<web-view wx:else src="{{link}}" binderror="error" bindload="res"></web-view>

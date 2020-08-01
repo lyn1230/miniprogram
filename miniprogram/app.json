@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/myLink/myLink"
+  ],
+  "plugins": {
+    "AR-plugin": {
+      "version": "dev",
+      "provider": "wx1a1c4f0ed97ce3a2"
+    }
+  },
+  "sitemapLocation": "sitemap.json"
+}

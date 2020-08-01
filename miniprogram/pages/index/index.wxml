@@ -1,0 +1,3 @@
+<navigator id="nav" url="{{'plugin://AR-plugin/AR-page?activityId=226&openId='+openid}}">
+  Go to AR page
+</navigator>
