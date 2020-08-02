@@ -12,8 +12,8 @@ let globalData = {
   shareConfig: {},
   activityConfig: {},
   res: "",
-  innerWidth: 0,
-  innerHeight: 0
+  innerWidth: wx.getSystemInfoSync().windowWidth,
+  innerHeight: wx.getSystemInfoSync().windowHeight
 };
 let { platformServerUrl } = globalData ;
 let activityId ;
@@ -51,11 +51,9 @@ Page({
     let context = null;
     console.log(`ifonLoadReadied:${ifonLoadReadied}`);
     if(ifonLoadReadied){    
-    console.log("onShow");    
     let that = this;  
     console.log(globalData.activityConfig.musicUrl); 
     if(globalData.activityConfig.musicUrl){   
-       // that.alert(globalData.activityConfig.musicUrl);   
         music.src = globalData.activityConfig.musicUrl;
         music.title = 'music';
         music.play();      
@@ -178,7 +176,6 @@ Page({
     try {
       music.stop();    
       ifonLoadReadied = false;        
-      //that.alert(ifRecongnize);
       if(ifRecongnize == false){   //退出页面还没有识别出来，停止监听摄像头数据 
         that.stopListen(listener, setInner);
       }
@@ -266,16 +263,12 @@ stopPlay: function() {
 },
 loadAnimation: function(modelUrl) { 
   let that = this;
-    const query = wx.createSelectorQuery().in(that);    
-    let nodeTemp = query.selectAll('#myCanvas');
-    nodeTemp.node();
-    query.exec(function (res) {      
-      let canvasId = res[0][0].node._canvasId;
-      const canvas = new THREE.global.registerCanvas(res[0][0].node)
-      that.setData({ canvasId })
-      //fbxModelLoad(canvas, animationUrl[id], THREE);
-      fbxModelLoad(canvas, modelUrl, THREE, globalData.innerWidth, globalData.innerHeight); 
-    }) 
+  const query = wx.createSelectorQuery().in(this);  
+  query.select('#myCanvas').node().exec(function (res) {
+    that.setData({ canvasId: res[0].node._canvasId });
+    const canvas = new THREE.global.registerCanvas(res[0].node);
+    fbxModelLoad(canvas, modelUrl, THREE, globalData.innerWidth, globalData.innerHeight); 
+  });   
 },
 handleCameraData: function (cameraData) {
   let rawData = cameraData.data;
@@ -284,7 +277,6 @@ handleCameraData: function (cameraData) {
   return rawData.slice(startArray, endArray);
 },
 stopListen: function(listen, set) {
-  //this.alert(set);
   let _this = this;
   setTimeout(function () {                      
     listen.stop({
@@ -330,7 +322,8 @@ showAnimationMore: function(subActivityId) {
         _this.setData({
           isShowScan: false,
           isShowAnimation: true
-        },function(){ _this.loading("模型加载中...");_this.loadAnimation(res.animationModelUrl);});                 
+        },function(){ _this.loading("模型加载中...");
+        _this.loadAnimation(res.animationModelUrl);});                 
         wx.setNavigationBarTitle({
           title: res.title
         })        
@@ -379,8 +372,6 @@ touchEnd(e) {
 },
 requestActivityInformation(){
   let _this = this;
-  globalData.innerWidth = wx.getSystemInfoSync().windowWidth;
-  globalData.innerHeight = wx.getSystemInfoSync().windowHeight;
   let activityConfig = {};
   let shareConfig;
   let url = platformServerUrl + "/services/frontend/rs/activity/scan/config/info?activityId=" + activityId ,

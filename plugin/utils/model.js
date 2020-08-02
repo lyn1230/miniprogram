@@ -3,7 +3,7 @@ import { OrbitControls } from './three/OrbitControls_new.js'
 import { resisterColladaLoader } from './three/ColladaLoader.js';
 
 let container, stats, controls;
-var fbxModelLoad = (canvas, animationUrl, THREE, w, h) => {  
+var fbxModelLoad = (canvas, animationUrl, THREE, w, h) => {
   if(! /.fbx/i.test(animationUrl)){
       return ;
   }
@@ -15,7 +15,6 @@ var fbxModelLoad = (canvas, animationUrl, THREE, w, h) => {
   let clock = new THREE.Clock();
   let mixers = [];
   var model;
-  var actions,activeAction;
   var animationUrlSpecial, tempObj=null;
   var canmeraConfig = {
     cameraFov: 45,
@@ -80,9 +79,7 @@ var fbxModelLoad = (canvas, animationUrl, THREE, w, h) => {
     let manager = new THREE.LoadingManager();
     var loader = new THREE.FBXLoader(manager);
     try{
-        loader.load(animationUrl, function (fbx) {
-
-            //console.log(fbx);
+        loader.load(animationUrl, function (fbx) {           
             model = fbx;
             scene.add(model);              
             fbx.mixer = new THREE.AnimationMixer(fbx);
@@ -109,7 +106,7 @@ var fbxModelLoad = (canvas, animationUrl, THREE, w, h) => {
   }
 
   //three.js播放动画
-  function animate() {      
+  function animate() {    
       canvas.requestAnimationFrame( animate );
       if ( mixers.length > 0 ) {
           for ( let i = 0; i < mixers.length; i ++ ) {

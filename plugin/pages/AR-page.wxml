@@ -1,4 +1,3 @@
-<!-- <view wx:if="{{!ifShowLogin}}"> -->
 <cover-view wx:if="{{isShowScan}}" class="scanPage">
   <cover-view class="scanTip">请将需要识别的主体放入框内</cover-view>
   <cover-view class="circleBox">
@@ -15,7 +14,6 @@
 
 <camera wx:if="{{isShowCamera}}" mode="normal" class="cameraClass" frame-size="small" device-position="back" flash="off" binderror="errorFun"></camera>
 
-
 <canvas hidden="{{!isShowAnimation}}"
   class="animation3D"
   type="webgl"
@@ -29,17 +27,3 @@
 <view class="myView" wx:if="{{isShowVideo}}">
   <video class="myVideo" src="{{video}}" autoplay="true" bindended="stopPlay"></video>
 </view>
-<!-- </view> -->
-
-<!-- <view wx:if="{{ifShowLogin}}">
-  <functional-page-navigator
-    wx:if="{{ifShowLogin}}"
-    name="loginAndGetUserInfo"
-    args="{{ args }}"
-    version="develop"
-    bind:success="loginSuccess"
-    bind:fail="loginFail"
-  >
-    <button class="login"><view>体验AR</view><view>请点此登陆哦~</view></button>
-  </functional-page-navigator>
-  </view> -->
