@@ -36,141 +36,150 @@ Page({
     isShowScan: true,
     isShowAnimation: false
   },
-  onLoad: function(options){  
-    let that = this;  
-    console.log(options);
-    globalData.activityId = options.activityId ;
-    activityId = globalData.activityId ; 
-    if (options.openId != "false") {
-      console.log("需要统计");
-      openId = options.openId;
-    }
-    that.requestActivityInformation() ; 
+  onLoad: function(){
+    let that = this;
+    const query = wx.createSelectorQuery().in(this);  
+    query.select('#myCanvas').node().exec(function (res) {
+      const canvas = THREE.global.registerCanvas(res[0].node)
+      that.setData({ canvasId: canvas._canvasId })
+      console.log(canvas);
+    });
   },
-  onShow: function() { 
-    let context = null;
-    console.log(`ifonLoadReadied:${ifonLoadReadied}`);
-    if(ifonLoadReadied){    
-    let that = this;  
-    console.log(globalData.activityConfig.musicUrl); 
-    if(globalData.activityConfig.musicUrl){   
-        music.src = globalData.activityConfig.musicUrl;
-        music.title = 'music';
-        music.play();      
-    }   
-    if(that.data.isShowScan == false || that.data.isShowVideo == true){
-      that.setData({
-        isShowScan: true,
-        isShowAnimation: false,
-        isShowVideo: false,
-        isShowCamera: true
-      });
-    }else{
-      that.changeTitle(globalData.activityConfig.activityTitleMain);    //更换小程序页面标题    
-      that.setData({
-        rulePicUrl: globalData.activityConfig.rulePicUrl
-      });
-    } 
-    (async function () {      
-        if(globalData.recogFlagFront == true){     //前端识别                
-          that.loading("请稍后");
-          if(globalData.activityConfig.animationModelUrl != null){
-            that.loadAnimation(globalData.activityConfig.animationModelUrl);
-          } 
-          var scanPic = globalData.activityConfig.scanPic;var imgtemp;var result;var flag = true;
-          //var setInner;    
-          context = wx.createCameraContext();      
-          listener = context.onCameraFrame((frame) => {      
-            if(frame && flag){
-              store.push(frame);        
-              flag = false;
-            }         
-          }) ;   
-        var startLis=function(listenTime) {         
-          listener.start({
-            success: function (res) {          
-              console.log("开始监听"); 
-              wx.hideLoading();
-              //that.alert("开始监听", 2000);
-              setInner = setInterval(function () {           
-                var timeStart = Date.now();     
-                imgtemp = new Uint8ClampedArray(that.handleCameraData(store[0]));
-                result = util.patten(imgtemp, store[0].width, store[0].height*0.5);
-                console.log(result) ;
-                if(result != -1) {       
-                  ifRecongnize = true;                                            
-                  that.stopListen(listener, setInner);      //识别成功后停止监听以及停止处理图像数据，为了方便识别多个图片，测试的时候识别成功后不停止，30s之后再停止；        
-                  that.showAnimation();
-                }
-                console.log("图片匹配用了" + (Date.now()-timeStart)/1000 + "秒");
-                store.shift();
-                flag = true;
-                }, 1000);           
-            }
-          });          
-        } 
-        util.setRecognitionImgs(scanPic,startLis.bind(that), 30000);  
-      } else if(globalData.recogFlagFront == false) {   //后端识别    
-        isAnimationFirstLoad = true;  //防止返回扫描页加载不了动画
-        var imgOriginBuffer;var result;var flag = true; var message = {}; var timeStart; 
-        //var setInner;
-        context = wx.createCameraContext();   
-        listener = context.onCameraFrame((frame) => {      
-          if(frame && flag){
-            store.push(frame);        
-            flag = false;
-          }         
-        }) ; 
-        postToEnd();
-        function postToEnd() {
-          var queryParam;          
-          listener.start({
-            success: function (res) {                    
-              console.log("开始监听"); 
-              //that.alert("开始监听", 2000);
-              setInner = setInterval(function () {
-                timeStart = Date.now();     
-                imgOriginBuffer = that.handleCameraData(store[0]);                                
-                  (async function(){
-                    const dataBase = wx.arrayBufferToBase64(upng.encode([imgOriginBuffer], store[0].width, store[0].height*0.5));  //arraybuffer转换为base64编码(176K大小)  
-                    console.log("1:获取base64用了" + (Date.now()-timeStart)/1000 + "秒");  
-                    console.log(frontId);          
-                    queryParam = {
-                      "activityId": activityId,
-                      "userPic": dataBase,
-                      "scanId" : frontId
-                    };
-                    let url = platformServerUrl + '/services/frontend/rs/scan/multiple/match',
-                        type = "POST",
-                        dataType = "json";                  
-                    await new Promise((resolve, reject) => {
-                      that.callbackApi(url, queryParam, type, dataType, (data) => {
-                        if (data.matched == true) {
-                          ifRecongnize = true;
-                          console.log("识别成功！！！" + data.subActivityId);
-                          that.stopListen(listener, setInner);      //识别成功后停止监听以及停止处理图像数据，为了方便识别多个图片，测试的时候识别成功后不停止，30s之后再停止；
-                          openId != false ? that.recordScanBehaviorMore(frontId, data.subActivityId) : "";
-                          that.showAnimationMore(data.subActivityId);
-                          flag = true;                          
-                        } else {
-                          console.log("2:识别失败");    
-                        }
-                        console.log("3:图片匹配用了" + (Date.now()-timeStart)/1000 + "秒");
-                        store.shift();
-                        flag = true;
-                        resolve();
-                      });
-                    });  
-                  }())
-                //});
-                }, 1000);           
-            }
-          });          
-        }
-      }
-      }())   
-  }
-},
+//   onLoad: function(options){  
+//     let that = this;  
+//     console.log(options);
+//     globalData.activityId = options.activityId ;
+//     activityId = globalData.activityId ; 
+//     if (options.openId != "false") {
+//       console.log("需要统计");
+//       openId = options.openId;
+//     }
+//     that.requestActivityInformation() ; 
+//   },
+//   onShow: function() { 
+//     let context = null;
+//     console.log(`ifonLoadReadied:${ifonLoadReadied}`);
+//     if(ifonLoadReadied){    
+//     let that = this;  
+//     console.log(globalData.activityConfig.musicUrl); 
+//     if(globalData.activityConfig.musicUrl){   
+//         music.src = globalData.activityConfig.musicUrl;
+//         music.title = 'music';
+//         music.play();      
+//     }   
+//     if(that.data.isShowScan == false || that.data.isShowVideo == true){
+//       that.setData({
+//         isShowScan: true,
+//         isShowAnimation: false,
+//         isShowVideo: false,
+//         isShowCamera: true
+//       });
+//     }else{
+//       that.changeTitle(globalData.activityConfig.activityTitleMain);    //更换小程序页面标题    
+//       that.setData({
+//         rulePicUrl: globalData.activityConfig.rulePicUrl
+//       });
+//     } 
+//     (async function () {      
+//         if(globalData.recogFlagFront == true){     //前端识别                
+//           that.loading("请稍后");
+//           if(globalData.activityConfig.animationModelUrl != null){
+//             that.loadAnimation(globalData.activityConfig.animationModelUrl);
+//           } 
+//           var scanPic = globalData.activityConfig.scanPic;var imgtemp;var result;var flag = true;
+//           //var setInner;    
+//           context = wx.createCameraContext();      
+//           listener = context.onCameraFrame((frame) => {      
+//             if(frame && flag){
+//               store.push(frame);        
+//               flag = false;
+//             }         
+//           }) ;   
+//         var startLis=function(listenTime) {         
+//           listener.start({
+//             success: function (res) {          
+//               console.log("开始监听"); 
+//               wx.hideLoading();
+//               //that.alert("开始监听", 2000);
+//               setInner = setInterval(function () {           
+//                 var timeStart = Date.now();     
+//                 imgtemp = new Uint8ClampedArray(that.handleCameraData(store[0]));
+//                 result = util.patten(imgtemp, store[0].width, store[0].height*0.5);
+//                 console.log(result) ;
+//                 if(result != -1) {       
+//                   ifRecongnize = true;                                            
+//                   that.stopListen(listener, setInner);      //识别成功后停止监听以及停止处理图像数据，为了方便识别多个图片，测试的时候识别成功后不停止，30s之后再停止；        
+//                   that.showAnimation();
+//                 }
+//                 console.log("图片匹配用了" + (Date.now()-timeStart)/1000 + "秒");
+//                 store.shift();
+//                 flag = true;
+//                 }, 1000);           
+//             }
+//           });          
+//         } 
+//         util.setRecognitionImgs(scanPic,startLis.bind(that), 30000);  
+//       } else if(globalData.recogFlagFront == false) {   //后端识别    
+//         isAnimationFirstLoad = true;  //防止返回扫描页加载不了动画
+//         var imgOriginBuffer;var result;var flag = true; var message = {}; var timeStart; 
+//         //var setInner;
+//         context = wx.createCameraContext();   
+//         listener = context.onCameraFrame((frame) => {      
+//           if(frame && flag){
+//             store.push(frame);        
+//             flag = false;
+//           }         
+//         }) ; 
+//         postToEnd();
+//         function postToEnd() {
+//           var queryParam;          
+//           listener.start({
+//             success: function (res) {                    
+//               console.log("开始监听"); 
+//               //that.alert("开始监听", 2000);
+//               setInner = setInterval(function () {
+//                 timeStart = Date.now();     
+//                 imgOriginBuffer = that.handleCameraData(store[0]);                                
+//                   (async function(){
+//                     const dataBase = wx.arrayBufferToBase64(upng.encode([imgOriginBuffer], store[0].width, store[0].height*0.5));  //arraybuffer转换为base64编码(176K大小)  
+//                     console.log("1:获取base64用了" + (Date.now()-timeStart)/1000 + "秒");  
+//                     console.log(frontId);          
+//                     queryParam = {
+//                       "activityId": activityId,
+//                       "userPic": dataBase,
+//                       "scanId" : frontId
+//                     };
+//                     let url = platformServerUrl + '/services/frontend/rs/scan/multiple/match',
+//                         type = "POST",
+//                         dataType = "json";                  
+//                     await new Promise((resolve, reject) => {
+//                       that.callbackApi(url, queryParam, type, dataType, (data) => {
+//                         if (data.matched == true) {
+//                           ifRecongnize = true;
+//                           console.log("识别成功！！！" + data.subActivityId);
+//                           that.stopListen(listener, setInner);      //识别成功后停止监听以及停止处理图像数据，为了方便识别多个图片，测试的时候识别成功后不停止，30s之后再停止；
+//                           openId != false ? that.recordScanBehaviorMore(frontId, data.subActivityId) : "";
+//                           that.showAnimationMore(data.subActivityId);
+//                           flag = true;                          
+//                         } else {
+//                           console.log("2:识别失败");    
+//                         }
+//                         console.log("3:图片匹配用了" + (Date.now()-timeStart)/1000 + "秒");
+//                         store.shift();
+//                         flag = true;
+//                         resolve();
+//                       });
+//                     });  
+//                   }())
+//                 //});
+//                 }, 1000);           
+//             }
+//           });          
+//         }
+//       }
+//       }())   
+//   }
+// },
   onUnload: function () {      
     let that = this;  
     try {

@@ -4,6 +4,7 @@ import { resisterColladaLoader } from './three/ColladaLoader.js';
 
 let container, stats, controls;
 var fbxModelLoad = (canvas, animationUrl, THREE, w, h) => {
+    console.log("高宽信息如下：", w,h);
   if(! /.fbx/i.test(animationUrl)){
       return ;
   }
